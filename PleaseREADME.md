@@ -4,3 +4,5 @@ I have had a difficulty learning JavaScript the normal way I kept giving up on i
 Javascript on a visual level making easy for me to possibly and finally get a grasp on the langauge.
 
 Using p5.js I will try for myself as a goal to atleast upload one or two small tasks or projects to complete.
+
+Please navigate the branches of this repository there you will see the files of my attempts and learning. 
