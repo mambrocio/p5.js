@@ -2,15 +2,19 @@ var guessItem = null;
 var interval = 100;
 var results = [];
 var solution = null;
+var gameOver = false;
 
 function setup(){
 	createCanvas(800, 300);
 }
 
 function draw(){
-	displayGameOver(results);
 	var gameScore = getGameScore(results);
-	if (gameScore.loss >= 3 || gameScore.total === 10){
+
+
+	if (gameScore.loss === 3 || gameScore.total === 10){
+		gameOver = true;
+		displayGameOver(gameScore);
 		return;
 	}
 	background(220);
@@ -23,26 +27,63 @@ function draw(){
 	if (guessItem) {
 		guessItem.render();
 	}
+	if (solution === true || solution === false ){
+		solutionMessage(gameScore.total, solution);
+	}	
+}
+
+function solutionMessage(seed, solution){
+	var trueMessages = [
+		'GOOD JOB!',
+		'KEEP IT UP',
+		'GREAT',
+		'NICE ON'
+	];
+
+
+	var falseMessages = [
+		'JUST MISSED IT',
+		'AND YOU MISSED',
+		'TRY AGAIN',
+		'BOGEY',
+	];
+
+	var messages;
+	push();
+	textAlign(CENTER, CENTER);
+	randomSeed(seed * 10000);
 
 	if (solution === true){
-		background(255);
-	} else if (solution === false){
-		background(0);
+		messages= trueMessages;
+	} else if (solution=== false){
+		messagges = falseMessages;
 	}
+	
+	translate(width/2, height/2);
+	text(messages[parseInt(random(messages.length), 10), 0, 0]);
+	pop();
 }
 
 function displayGameOver(score){
 	push();
+
+	background(255);
 	textAlign(CENTER, CENTER);
 	translate(width/2, height/2);
 
 	fill(237, 34, 93);
 	textSize(24);
-	text('You have ' + score.win + 'correct guess', 0, 0);
+	text('GAME OVER!', 0, 0);
 
 	fill(0);
-	translate(0, 100);
-	text('Game OVER', width/2, height/2);
+	translate(0, 36);
+	text('You have ' + score.win + ' correct guesses', 0, 0);
+
+	var alternatingValue = map(sin(frameCount / 60), -1, 1, 0, 255);
+	fill(237, 34, 93, alternatingValue);
+	textSize(16);
+	translate(0, 78);
+	text('PRESS ENTER', 0, 0);
 	pop();
 }
 
@@ -64,7 +105,19 @@ function getGameScore(score){
 }
 
 
+function restartTheGame(){
+	results = [];
+	solution = null;
+	gameOver = false;
+}
+
 function keyPressed(){
+	if (gameOver === true){
+ 		if (keyCode === ENTER){
+			restartTheGame();
+			return;
+		 }
+	}
 	if (guessItem !== null){
 	console.log('You Pressed', key);
 	solution = guessItem.solve(key);
